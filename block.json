@@ -1,0 +1,14 @@
+{
+	"name": "ashar-irfan-giphy-block",
+	"title": "AsharIrfan Giphy Block",
+	"category": "text",
+	"icon": "edit",
+    "description": "A block starter for WebDevStudios projects.",
+	"textdomain": "giphy-block",
+	"supports": {
+		"html": false
+	},
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}
