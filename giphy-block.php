@@ -1,14 +1,15 @@
 <?php
 /**
- * Plugin Name:     AsharIrfan Giphy Block
- * Description:     A starter plugin for Gutenberg blocks development.
+ * Plugin Name:     Giphy Block
+ * Description:     A block for displaying GIFs from Giphy.com in Gutenberg.
  * Version:         0.1.0
- * Author:          AsharIrfan
+ * Author:          Ashar Irfan
  * License:         GPL-2.0-or-later
  * License URI:     https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:     giphy-block
  *
- * @package         AsharIrfan\GiphyBlock
+ * @package AsharIrfan\GiphyBlock
+ * @since 0.1.0
  */
 
 namespace AsharIrfan\GiphyBlock;
@@ -32,7 +33,7 @@ function register_block() {
 
 	// Verify we have an editor script.
 	if ( ! file_exists( plugin_dir_path( __FILE__ ) . $editor_script ) ) {
-		wp_die( esc_html__( 'Whoops! You need to run `npm run build` for the AsharIrfan Giphy Block first.', 'giphy-block' ) );
+		wp_die( esc_html__( 'Whoops! You need to run `npm run build` for the Giphy Block first.', 'giphy-block' ) );
 	}
 
 	// Autoload dependencies and version.
