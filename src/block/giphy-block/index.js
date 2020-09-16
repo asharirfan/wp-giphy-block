@@ -12,7 +12,7 @@ import './style.scss';
  * @link https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
 registerBlockType( 'ashar-irfan/giphy-block', {
-	title: __( 'AsharIrfan Giphy Block', 'giphy-block' ),
+	title: __( 'Giphy Block', 'giphy-block' ),
 	icon: 'edit',
 	category: 'common',
 	keywords: [
@@ -20,12 +20,19 @@ registerBlockType( 'ashar-irfan/giphy-block', {
 		__( 'GiphyBlock', 'giphy-block' ),
 	],
 	attributes: {
-		content: {
+		searchActive: {
+			type: 'boolean',
+			default: false,
+		},
+		searchResults: {
 			type: 'array',
-			source: 'children',
-			selector: 'p',
+			default: [],
+		},
+		selectedGif: {
+			type: 'array',
+			default: [],
 		},
 	},
 	edit,
-	save,
+	save: () => null,
 } );
