@@ -69,11 +69,14 @@ function register_block() {
 	}
 
 	// Register block with WordPress.
-	register_block_type( 'ashar-irfan/giphy-block', array(
-		'editor_script' => 'ashar-irfan-giphy-block-editor-script',
-		'editor_style'  => 'ashar-irfan-giphy-block-editor-style',
-		'style'         => 'ashar-irfan-giphy-block-style',
-	) );
+	register_block_type(
+		'ashar-irfan/giphy-block',
+		array(
+			'editor_script' => 'ashar-irfan-giphy-block-editor-script',
+			'editor_style'  => 'ashar-irfan-giphy-block-editor-style',
+			'style'         => 'ashar-irfan-giphy-block-style',
+		)
+	);
 
 	// Register frontend script.
 	if ( file_exists( plugin_dir_path( __FILE__ ) . $frontend_script ) ) {
