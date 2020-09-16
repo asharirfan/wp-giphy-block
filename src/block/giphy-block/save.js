@@ -1,4 +1,4 @@
-import { RichText } from '@wordpress/block-editor';
+import { Card, CardBody } from '@wordpress/components';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -15,16 +15,20 @@ import { RichText } from '@wordpress/block-editor';
 export default function Save( props ) {
 	const {
 		attributes: {
-			content,
+			selectedGif,
 		},
 		className,
 	} = props;
 
 	return (
-		<RichText.Content
-			className={ className }
-			tagName="p"
-			value={ content }
-		/>
+		<div className={ className }>
+			{ 0 !== selectedGif.length ? (
+				<Card>
+					<CardBody>
+						<img src={ selectedGif.url } alt={ selectedGif.title } />
+					</CardBody>
+				</Card>
+			) : false }
+		</div>
 	);
 }
