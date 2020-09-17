@@ -1,4 +1,3 @@
-import { Card, CardBody } from '@wordpress/components';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -22,12 +21,8 @@ export default function Save( props ) {
 
 	return (
 		<div className={ className }>
-			{ 0 !== selectedGif.length ? (
-				<Card>
-					<CardBody>
-						<img src={ selectedGif.url } alt={ selectedGif.title } />
-					</CardBody>
-				</Card>
+			{ selectedGif.hasOwnProperty( 'url' ) ? (
+				<img src={ selectedGif.url } alt={ selectedGif.title } />
 			) : false }
 		</div>
 	);
