@@ -32,6 +32,18 @@ registerBlockType( 'ashar-irfan/giphy-block', {
 			type: 'object',
 			default: {},
 		},
+		searchLimit: {
+			type: 'string',
+			default: '25',
+		},
+		searchRating: {
+			type: 'string',
+			default: 'r',
+		},
+		searchLang: {
+			type: 'string',
+			default: 'en',
+		},
 	},
 	edit,
 	save,
