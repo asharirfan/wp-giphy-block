@@ -27,10 +27,11 @@ export default function Edit( props ) {
 
 	const searchGiphy = ( query ) => {
 		if ( ! query ) {
+			setAttributes( { searchResults: [] } );
 			return;
 		}
 
-		setAttributes( { searchActive: true, searchResults: [] } );
+		setAttributes( { searchActive: true, searchResults: [], selectedGif: {} } );
 
 		try {
 			const fetch = axios( {
@@ -61,10 +62,7 @@ export default function Edit( props ) {
 	};
 
 	const setSelectedGif = ( gif ) => {
-		const selected = [];
-		selected.url = gif.url;
-		selected.title = gif.title;
-		setAttributes( { selectedGif: selected, searchResults: [] } );
+		setAttributes( { selectedGif: gif, searchResults: [] } );
 	};
 
 	return (
@@ -99,9 +97,11 @@ export default function Edit( props ) {
 					} ) }
 				</Card>
 			) : false }
-			{ 0 !== selectedGif.length ? (
+			{ selectedGif.hasOwnProperty( 'url' ) ? (
 				<Card>
-					<CardBody>
+					<CardBody style={ {
+						'text-align': 'center',
+					} }>
 						<img src={ selectedGif.url } alt={ selectedGif.title } />
 					</CardBody>
 				</Card>
