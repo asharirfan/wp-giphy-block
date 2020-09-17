@@ -29,10 +29,10 @@ registerBlockType( 'ashar-irfan/giphy-block', {
 			default: [],
 		},
 		selectedGif: {
-			type: 'array',
-			default: [],
+			type: 'object',
+			default: {},
 		},
 	},
 	edit,
-	save: () => null,
+	save,
 } );
