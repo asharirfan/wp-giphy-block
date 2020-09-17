@@ -44,6 +44,10 @@ registerBlockType( 'ashar-irfan/giphy-block', {
 			type: 'string',
 			default: 'en',
 		},
+		gifAlign: {
+			type: 'string',
+			default: 'center',
+		},
 	},
 	edit,
 	save,
