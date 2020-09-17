@@ -1,3 +1,4 @@
+import { getBlockDefaultClassName } from '@wordpress/blocks';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -15,12 +16,12 @@ export default function Save( props ) {
 	const {
 		attributes: {
 			selectedGif,
+			gifAlign,
 		},
-		className,
 	} = props;
 
 	return (
-		<div className={ className }>
+		<div className={ `${ getBlockDefaultClassName( 'ashar-irfan/giphy-block' ) } ${ gifAlign }` }>
 			{ selectedGif.hasOwnProperty( 'url' ) ? (
 				<img src={ selectedGif.url } alt={ selectedGif.title } />
 			) : false }
