@@ -1,5 +1,19 @@
-import { Button, Card, CardBody, TextControl, Spinner } from '@wordpress/components';
+import {
+	Button,
+	Card,
+	CardBody,
+	TextControl,
+	Spinner,
+	Panel,
+	PanelBody,
+	PanelRow,
+	SelectControl,
+} from '@wordpress/components';
+import {
+	InspectorControls,
+} from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
+import { addQueryArgs } from '@wordpress/url';
 import axios from 'axios';
 
 // import './editor.scss';
@@ -20,6 +34,9 @@ export default function Edit( props ) {
 			searchActive,
 			searchResults,
 			selectedGif,
+			searchLimit,
+			searchRating,
+			searchLang,
 		},
 		className,
 		setAttributes,
@@ -34,11 +51,24 @@ export default function Edit( props ) {
 		setAttributes( { searchActive: true, searchResults: [], selectedGif: {} } );
 
 		try {
+			const giphyApiEndpoint = addQueryArgs(
+				'https://api.giphy.com/v1/gifs/search',
+				{
+					api_key: 'cpiNEMWpw4D3DXaT4QIu7A8RZCnupclo',
+					q: query,
+					limit: searchLimit,
+					offset: 0,
+					rating: searchRating,
+					lang: searchLang,
+				}
+			);
+
 			const fetch = axios( {
-				url: `https://api.giphy.com/v1/gifs/search?api_key=cpiNEMWpw4D3DXaT4QIu7A8RZCnupclo&q=${ query }&limit=25&offset=0&rating=r&lang=en`,
+				url: giphyApiEndpoint,
 				method: 'GET',
 				credentials: 'same-origin',
 			} );
+
 			fetch.then( ( response ) => {
 				setAttributes( { searchActive: false } );
 
@@ -65,47 +95,124 @@ export default function Edit( props ) {
 		setAttributes( { selectedGif: gif, searchResults: [] } );
 	};
 
+	const ratingOptions = [
+		{ value: null, label: __( 'Select a rating', 'giphy-block' ), disabled: true },
+		{ value: 'g', label: __( 'G', 'giphy-block' ) },
+		{ value: 'pg', label: __( 'PG', 'giphy-block' ) },
+		{ value: 'pg-13', label: __( 'PG-13', 'giphy-block' ) },
+		{ value: 'r', label: __( 'R', 'giphy-block' ) },
+	];
+
+	const languageOptions = [
+		{ value: null, label: __( 'Select a language', 'giphy-block' ), disabled: true },
+		{ value: 'en', label: __( 'English (en)', 'giphy-block' ) },
+		{ value: 'es', label: __( 'Spanish (es)', 'giphy-block' ) },
+		{ value: 'pt', label: __( 'Portuguese (pt)', 'giphy-block' ) },
+		{ value: 'id', label: __( 'Indonesian (id)', 'giphy-block' ) },
+		{ value: 'fr', label: __( 'French (fr)', 'giphy-block' ) },
+		{ value: 'ar', label: __( 'Arabic (ar)', 'giphy-block' ) },
+		{ value: 'tr', label: __( 'Turkish (tr)', 'giphy-block' ) },
+		{ value: 'th', label: __( 'Thai (th)', 'giphy-block' ) },
+		{ value: 'vi', label: __( 'Vietnamese (vi)', 'giphy-block' ) },
+		{ value: 'de', label: __( 'German (de)', 'giphy-block' ) },
+		{ value: 'it', label: __( 'Italian (it)', 'giphy-block' ) },
+		{ value: 'ja', label: __( 'Japanese (ja)', 'giphy-block' ) },
+		{ value: 'zh-CN', label: __( 'Chinese Simplified (zh-CN)', 'giphy-block' ) },
+		{ value: 'zh-TW', label: __( 'Chinese Traditional (zh-TW)', 'giphy-block' ) },
+		{ value: 'ru', label: __( 'Russian (ru)', 'giphy-block' ) },
+		{ value: 'ko', label: __( 'Korean (ko)', 'giphy-block' ) },
+		{ value: 'pl', label: __( 'Polish (pl)', 'giphy-block' ) },
+		{ value: 'nl', label: __( 'Dutch (nl)', 'giphy-block' ) },
+		{ value: 'ro', label: __( 'Romanian (ro)', 'giphy-block' ) },
+		{ value: 'hu', label: __( 'Hungarian (hu)', 'giphy-block' ) },
+		{ value: 'sv', label: __( 'Swedish (sv)', 'giphy-block' ) },
+		{ value: 'cs', label: __( 'Czech (cs)', 'giphy-block' ) },
+		{ value: 'hi', label: __( 'Hindi (hi)', 'giphy-block' ) },
+		{ value: 'bn', label: __( 'Bengali (bn)', 'giphy-block' ) },
+		{ value: 'da', label: __( 'Danish (da)', 'giphy-block' ) },
+		{ value: 'fa', label: __( 'Farsi (fa)', 'giphy-block' ) },
+		{ value: 'tl', label: __( 'Filipino (tl)', 'giphy-block' ) },
+		{ value: 'fi', label: __( 'Finnish (fi)', 'giphy-block' ) },
+		{ value: 'iw', label: __( 'Hebrew (iw)', 'giphy-block' ) },
+		{ value: 'ms', label: __( 'Malay (ms)', 'giphy-block' ) },
+		{ value: 'no', label: __( 'Norwegian (no)', 'giphy-block' ) },
+		{ value: 'uk', label: __( 'Ukrainian (uk)', 'giphy-block' ) },
+	];
+
 	return (
-		<div className={ className }>
-			<Card className="giphy-block-search">
-				<CardBody>
-					<TextControl
-						label={ __( 'Giphy Block', 'giphy-block' ) }
-						placeholder={ __( 'Search for GIFs here...', 'giphy-block' ) }
-						onChange={ searchGiphy }
-					/>
-					{ searchActive && ( <Spinner /> ) }
-				</CardBody>
-			</Card>
-			{ 0 !== searchResults.length ? (
-				<Card className="giphy-block-search-results">
-					{ searchResults.map( ( gif, index ) => {
-						return (
-							<div key={ index }>
-								<Button
-									onClick={ () => setSelectedGif( gif ) }
-									style={ {
-										display: 'block',
-										width: '100%',
-										height: '100%',
-									} }
-								>
-									<img src={ gif.url } alt={ gif.title } />
-								</Button>
-							</div>
-						);
-					} ) }
-				</Card>
-			) : false }
-			{ selectedGif.hasOwnProperty( 'url' ) ? (
-				<Card>
-					<CardBody style={ {
-						'text-align': 'center',
-					} }>
-						<img src={ selectedGif.url } alt={ selectedGif.title } />
+		<>
+			<div className={ className }>
+				<Card className="giphy-block-search">
+					<CardBody>
+						<TextControl
+							label={ __( 'Giphy Block', 'giphy-block' ) }
+							placeholder={ __( 'Search for GIFs here...', 'giphy-block' ) }
+							onChange={ searchGiphy }
+						/>
+						{ searchActive && ( <Spinner /> ) }
 					</CardBody>
 				</Card>
-			) : false }
-		</div>
+				{ 0 !== searchResults.length ? (
+					<Card className="giphy-block-search-results">
+						{ searchResults.map( ( gif, index ) => {
+							return (
+								<div key={ index }>
+									<Button
+										onClick={ () => setSelectedGif( gif ) }
+										style={ {
+											display: 'block',
+											width: '100%',
+											height: '100%',
+										} }
+									>
+										<img src={ gif.url } alt={ gif.title } />
+									</Button>
+								</div>
+							);
+						} ) }
+					</Card>
+				) : false }
+				{ selectedGif.hasOwnProperty( 'url' ) ? (
+					<Card>
+						<CardBody style={ {
+							textAlign: 'center',
+						} }>
+							<img src={ selectedGif.url } alt={ selectedGif.title } />
+						</CardBody>
+					</Card>
+				) : false }
+			</div>
+
+			<InspectorControls>
+				<Panel>
+					<PanelBody title={ __( 'Giphy Block Settings', 'giphy-block' ) } initialOpen={ true }>
+						<PanelRow>
+							<TextControl
+								label={ __( 'Number of GIFs to display', 'giphy-block' ) }
+								type="number"
+								value={ searchLimit }
+								onChange={ ( limit ) => setAttributes( { searchLimit: limit } ) }
+							/>
+						</PanelRow>
+						<PanelRow>
+							<SelectControl
+								label={ __( 'Rating', 'giphy-block' ) }
+								value={ searchRating }
+								options={ ratingOptions }
+								onChange={ ( rating ) => setAttributes( { searchRating: rating } ) }
+							/>
+						</PanelRow>
+						<PanelRow>
+							<SelectControl
+								label={ __( 'Language', 'giphy-block' ) }
+								value={ searchLang }
+								options={ languageOptions }
+								onChange={ ( language ) => setAttributes( { searchLang: language } ) }
+							/>
+						</PanelRow>
+					</PanelBody>
+				</Panel>
+			</InspectorControls>
+		</>
 	);
 }
