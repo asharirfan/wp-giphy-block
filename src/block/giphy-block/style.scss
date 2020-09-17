@@ -1,6 +1,28 @@
 // Front-end styles.
-$color-red: rgb(206, 70, 70);
 
 .wp-block-ashar-irfan-giphy-block {
-	color: $color-red;
+
+	&.right {
+		text-align: right;
+
+		img {
+			margin: 0 0 0 auto;
+		}
+	}
+
+	&.center {
+		text-align: center;
+
+		img {
+			margin: 0 auto;
+		}
+	}
+
+	&.left {
+		text-align: left;
+
+		img {
+			margin: 0 auto 0 0;
+		}
+	}
 }
