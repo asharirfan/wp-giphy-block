@@ -18,8 +18,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import axios from 'axios';
-
-// import './editor.scss';
+import './editor.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -170,12 +169,15 @@ export default function Edit( props ) {
 					<CardBody>
 						<TextControl
 							label={ __( 'Giphy Block', 'giphy-block' ) }
-							placeholder={ __( 'Search for GIFs here...', 'giphy-block' ) }
+							placeholder={
+								__( 'Search for GIFs here...', 'giphy-block' )
+							}
 							onChange={ searchGiphy }
 						/>
 						{ searchActive && ( <Spinner /> ) }
 					</CardBody>
 				</Card>
+
 				{ 0 !== searchResults.length ? (
 					<Card className="giphy-block-search-results">
 						{ searchResults.map( ( gif, index ) => {
@@ -183,11 +185,6 @@ export default function Edit( props ) {
 								<div key={ index }>
 									<Button
 										onClick={ () => setSelectedGif( gif ) }
-										style={ {
-											display: 'block',
-											width: '100%',
-											height: '100%',
-										} }
 									>
 										<img src={ gif.url } alt={ gif.title } />
 									</Button>
@@ -196,11 +193,10 @@ export default function Edit( props ) {
 						} ) }
 					</Card>
 				) : false }
+
 				{ selectedGif.hasOwnProperty( 'url' ) ? (
 					<Card>
-						<CardBody style={ {
-							textAlign: gifAlign, // stylelint-disable-line value-keyword-case
-						} }>
+						<CardBody className={ `giphy-block-display-wrapper ${ gifAlign }` }>
 							<img src={ selectedGif.url } alt={ selectedGif.title } />
 						</CardBody>
 					</Card>
@@ -228,7 +224,10 @@ export default function Edit( props ) {
 
 			<InspectorControls>
 				<Panel>
-					<PanelBody title={ __( 'Giphy Block Settings', 'giphy-block' ) } initialOpen={ true }>
+					<PanelBody
+						title={ __( 'Giphy Block Settings', 'giphy-block' ) }
+						initialOpen={ true }
+					>
 						<PanelRow>
 							<TextControl
 								label={ __( 'Number of GIFs to display', 'giphy-block' ) }
