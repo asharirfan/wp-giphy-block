@@ -1,6 +1,38 @@
 // WordPress editor styles.
-$color-blue: rgb(33, 175, 194);
 
 .wp-block-ashar-irfan-giphy-block {
-	color: $color-blue;
+
+	.giphy-block-search .components-card__body {
+		position: relative;
+
+		.components-spinner {
+			position: absolute;
+			right: 24px;
+			top: 50%;
+		}
+	}
+
+	.giphy-block-search-results {
+
+		button {
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+	}
+
+	.giphy-block-display-wrapper {
+
+		&.center {
+			text-align: center;
+		}
+
+		&.left {
+			text-align: left;
+		}
+
+		&.right {
+			text-align: right;
+		}
+	}
 }
