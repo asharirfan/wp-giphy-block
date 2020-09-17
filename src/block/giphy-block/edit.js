@@ -8,8 +8,11 @@ import {
 	PanelBody,
 	PanelRow,
 	SelectControl,
+	Toolbar,
+	DropdownMenu,
 } from '@wordpress/components';
 import {
+	BlockControls,
 	InspectorControls,
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
@@ -37,6 +40,7 @@ export default function Edit( props ) {
 			searchLimit,
 			searchRating,
 			searchLang,
+			gifAlign,
 		},
 		className,
 		setAttributes,
@@ -139,6 +143,26 @@ export default function Edit( props ) {
 		{ value: 'uk', label: __( 'Ukrainian (uk)', 'giphy-block' ) },
 	];
 
+	const layouts = {
+		left: {
+			title: __( 'Align Left', 'giphy-block' ),
+			icon: 'editor-alignleft',
+			value: 'left',
+		},
+		center: {
+			title: __( 'Align Center', 'giphy-block' ),
+			icon: 'editor-aligncenter',
+			value: 'center',
+		},
+		right: {
+			title: __( 'Align Right', 'giphy-block' ),
+			icon: 'editor-alignright',
+			value: 'right',
+		},
+	};
+
+	const defaultLayouts = [ 'left', 'center', 'right' ];
+
 	return (
 		<>
 			<div className={ className }>
@@ -175,13 +199,32 @@ export default function Edit( props ) {
 				{ selectedGif.hasOwnProperty( 'url' ) ? (
 					<Card>
 						<CardBody style={ {
-							textAlign: 'center',
+							textAlign: gifAlign, // stylelint-disable-line value-keyword-case
 						} }>
 							<img src={ selectedGif.url } alt={ selectedGif.title } />
 						</CardBody>
 					</Card>
 				) : false }
 			</div>
+
+			<BlockControls>
+				<Toolbar>
+					<DropdownMenu
+						hasArrowIndicator
+						icon={ layouts[ gifAlign ].icon }
+						label={ __( 'Align GIF', 'giphy-block' ) }
+						controls={ defaultLayouts.map( ( layout ) => {
+							const isActive = gifAlign === layout;
+
+							return {
+								...layouts[ layout ],
+								isActive,
+								onClick: () => setAttributes( { gifAlign: layout } ),
+							};
+						} ) }
+					/>
+				</Toolbar>
+			</BlockControls>
 
 			<InspectorControls>
 				<Panel>
