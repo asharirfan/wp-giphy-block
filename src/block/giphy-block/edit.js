@@ -195,11 +195,9 @@ export default function Edit( props ) {
 				) : false }
 
 				{ selectedGif.hasOwnProperty( 'url' ) ? (
-					<Card>
-						<CardBody className={ `giphy-block-display-wrapper ${ gifAlign }` }>
-							<img src={ selectedGif.url } alt={ selectedGif.title } />
-						</CardBody>
-					</Card>
+					<div className={ `giphy-block-display-wrapper ${ gifAlign }` }>
+						<img src={ selectedGif.url } alt={ selectedGif.title } />
+					</div>
 				) : false }
 			</div>
 
