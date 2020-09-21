@@ -165,18 +165,20 @@ export default function Edit( props ) {
 	return (
 		<>
 			<div className={ className }>
-				<Card className="giphy-block-search">
-					<CardBody>
-						<TextControl
-							label={ __( 'Giphy Block', 'giphy-block' ) }
-							placeholder={
-								__( 'Search for GIFs here...', 'giphy-block' )
-							}
-							onChange={ searchGiphy }
-						/>
-						{ searchActive && ( <Spinner /> ) }
-					</CardBody>
-				</Card>
+				{ ! selectedGif.hasOwnProperty( 'url' ) ? (
+					<Card className="giphy-block-search">
+						<CardBody>
+							<TextControl
+								label={ __( 'Giphy Block', 'giphy-block' ) }
+								placeholder={
+									__( 'Search for GIFs here...', 'giphy-block' )
+								}
+								onChange={ searchGiphy }
+							/>
+							{ searchActive && ( <Spinner /> ) }
+						</CardBody>
+					</Card>
+				) : false }
 
 				{ 0 !== searchResults.length ? (
 					<Card className="giphy-block-search-results">
