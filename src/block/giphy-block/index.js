@@ -13,7 +13,7 @@ import './style.scss';
  */
 registerBlockType( 'ashar-irfan/giphy-block', {
 	title: __( 'Giphy Block', 'giphy-block' ),
-	icon: 'edit',
+	icon: 'format-video',
 	category: 'common',
 	keywords: [
 		__( 'AsharIrfan', 'giphy-block' ),
