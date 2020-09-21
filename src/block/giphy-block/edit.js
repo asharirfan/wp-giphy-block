@@ -10,6 +10,7 @@ import {
 	SelectControl,
 	Toolbar,
 	DropdownMenu,
+	ToolbarButton,
 } from '@wordpress/components';
 import {
 	BlockControls,
@@ -17,6 +18,7 @@ import {
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
+import { useEffect } from '@wordpress/element';
 import axios from 'axios';
 import './editor.scss';
 
@@ -40,6 +42,7 @@ export default function Edit( props ) {
 			searchRating,
 			searchLang,
 			gifAlign,
+			isEditing,
 		},
 		className,
 		setAttributes,
@@ -95,7 +98,7 @@ export default function Edit( props ) {
 	};
 
 	const setSelectedGif = ( gif ) => {
-		setAttributes( { selectedGif: gif, searchResults: [] } );
+		setAttributes( { selectedGif: gif, searchResults: [], isEditing: false } );
 	};
 
 	const ratingOptions = [
@@ -162,10 +165,16 @@ export default function Edit( props ) {
 
 	const defaultLayouts = [ 'left', 'center', 'right' ];
 
+	useEffect( () => {
+		if ( ! selectedGif.hasOwnProperty( 'url' ) ) {
+			setAttributes( { isEditing: true } );
+		}
+	}, [] );
+
 	return (
 		<>
 			<div className={ className }>
-				{ ! selectedGif.hasOwnProperty( 'url' ) ? (
+				{ isEditing ? (
 					<Card className="giphy-block-search">
 						<CardBody>
 							<TextControl
@@ -180,7 +189,7 @@ export default function Edit( props ) {
 					</Card>
 				) : false }
 
-				{ 0 !== searchResults.length ? (
+				{ ( 0 !== searchResults.length && isEditing ) ? (
 					<Card className="giphy-block-search-results">
 						{ searchResults.map( ( gif, index ) => {
 							return (
@@ -196,7 +205,7 @@ export default function Edit( props ) {
 					</Card>
 				) : false }
 
-				{ selectedGif.hasOwnProperty( 'url' ) ? (
+				{ ( selectedGif.hasOwnProperty( 'url' ) && ! isEditing ) ? (
 					<div className={ `giphy-block-display-wrapper ${ gifAlign }` }>
 						<img src={ selectedGif.url } alt={ selectedGif.title } />
 					</div>
@@ -219,6 +228,19 @@ export default function Edit( props ) {
 							};
 						} ) }
 					/>
+					{ isEditing ? (
+						<ToolbarButton
+							icon="welcome-view-site"
+							label={ __( 'Switch to Preview', 'giphy-block' ) }
+							onClick={ () => setAttributes( { isEditing: false } ) }
+						/>
+					) : (
+						<ToolbarButton
+							icon="edit"
+							label={ __( 'Switch to Edit', 'giphy-block' ) }
+							onClick={ () => setAttributes( { isEditing: true } ) }
+						/>
+					) }
 				</Toolbar>
 			</BlockControls>
 
