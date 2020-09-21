@@ -233,11 +233,12 @@ export default function Edit( props ) {
 							icon="welcome-view-site"
 							label={ __( 'Switch to Preview', 'giphy-block' ) }
 							onClick={ () => setAttributes( { isEditing: false } ) }
+							disabled={ ! selectedGif.hasOwnProperty( 'url' ) }
 						/>
 					) : (
 						<ToolbarButton
 							icon="edit"
-							label={ __( 'Switch to Edit', 'giphy-block' ) }
+							label={ __( 'Select another Gif', 'giphy-block' ) }
 							onClick={ () => setAttributes( { isEditing: true } ) }
 						/>
 					) }
