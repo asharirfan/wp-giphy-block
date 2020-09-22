@@ -48,6 +48,10 @@ registerBlockType( 'ashar-irfan/giphy-block', {
 			type: 'string',
 			default: 'center',
 		},
+		isEditing: {
+			type: 'string',
+			default: false,
+		},
 	},
 	edit,
 	save,
