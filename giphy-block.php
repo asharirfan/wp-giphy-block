@@ -14,6 +14,11 @@
 
 namespace AsharIrfan\GiphyBlock;
 
+use WP_REST_Server;
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_Error;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -46,6 +51,14 @@ function register_block() {
 		$asset_file['dependencies'],
 		$asset_file['version'],
 		true
+	);
+
+	wp_localize_script(
+		'ashar-irfan-giphy-block-editor-script',
+		'wpGiphyBlockData',
+		[
+			'security' => wp_create_nonce( 'wp_rest' ),
+		]
 	);
 
 	// Register editor style.
@@ -90,3 +103,108 @@ function register_block() {
 	}
 }
 add_action( 'init', __NAMESPACE__ . '\register_block' );
+
+/**
+ * Register REST routes for block.
+ *
+ * @author Ashar Irfan
+ * @since 0.1.0
+ */
+function register_rest_routes() {
+	register_rest_route(
+		'ashar-irfan/wp-giphy-block/v1',
+		'/option/(?P<option>([A-Za-z\_])+)/',
+		[
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => __NAMESPACE__ . '\get_giphy_option',
+				'permission_callback' => __NAMESPACE__ . '\rest_authenticate',
+				'args'                => [
+					'option' => [
+						'validate_callback' => function( $param ) {
+							return is_string( $param );
+						},
+					],
+				],
+			],
+			[
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => __NAMESPACE__ . '\update_giphy_option',
+				'permission_callback' => __NAMESPACE__ . '\rest_authenticate',
+				'args'                => [
+					'option' => [
+						'validate_callback' => function( $param ) {
+							return is_string( $param );
+						},
+					],
+				],
+			],
+		]
+	);
+}
+add_action( 'rest_api_init', __NAMESPACE__ . '\register_rest_routes' );
+
+/**
+ * Get block option via REST API.
+ *
+ * @author Ashar Irfan
+ * @since 0.1.0
+ *
+ * @param WP_REST_Request $request REST API request object.
+ * @return WP_Error|WP_REST_Response
+ */
+function get_giphy_option( WP_REST_Request $request ) {
+	$option_name = $request->get_param( 'option' );
+
+	if ( ! is_string( $option_name ) ) {
+		return new WP_Error(
+			'invalid_option_name',
+			esc_html__( 'Invalid option name', 'giphy-block' )
+		);
+	}
+
+	return new WP_REST_Response(
+		get_option( $option_name, '' ),
+		200
+	);
+}
+
+/**
+ * Get block option via REST API.
+ *
+ * @author Ashar Irfan
+ * @since 0.1.0
+ *
+ * @param WP_REST_Request $request REST API request object.
+ * @return WP_Error|WP_REST_Response
+ */
+function update_giphy_option( WP_REST_Request $request ) {
+	$option_name = $request->get_param( 'option' );
+
+	if ( ! is_string( $option_name ) ) {
+		return new WP_Error(
+			'invalid_option_name',
+			esc_html__( 'Invalid option name', 'giphy-block' )
+		);
+	}
+
+	$request_json = $request->get_json_params();
+	$option_value = $request_json['option_value'] ?? '';
+
+	return new WP_REST_Response(
+		update_option( $option_name, $option_value ),
+		200
+	);
+}
+
+/**
+ * Check if the current user has permissions to publish posts.
+ *
+ * @author Ashar Irfan
+ * @since 0.1.0
+ *
+ * @return boolean
+ */
+function rest_authenticate() {
+	return current_user_can( 'publish_posts' );
+}
