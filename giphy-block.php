@@ -57,7 +57,8 @@ function register_block() {
 		'ashar-irfan-giphy-block-editor-script',
 		'wpGiphyBlockData',
 		[
-			'security' => wp_create_nonce( 'wp_rest' ),
+			'security'       => wp_create_nonce( 'wp_rest' ),
+			'optionEndpoint' => rest_url( 'ashar-irfan/wp-giphy-block/v1/option' ),
 		]
 	);
 
