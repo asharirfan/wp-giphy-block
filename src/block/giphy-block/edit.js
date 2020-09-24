@@ -18,9 +18,51 @@ import {
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
-import { useEffect } from '@wordpress/element';
+import {
+	useEffect,
+	useState,
+	useRef,
+} from '@wordpress/element';
 import axios from 'axios';
 import './editor.scss';
+import GiphyInputControl from '../../utils/components/giphy-text-control';
+
+/* global wpGiphyBlockData */
+
+const getGiphyApiKey = async () => {
+	const request = await axios( {
+		url: `${ wpGiphyBlockData.optionEndpoint }/wp_giphy_block_api_key`,
+		method: 'GET',
+		headers: {
+			'X-WP-Nonce': wpGiphyBlockData.security,
+		},
+	} );
+
+	if ( 200 !== request.status ) {
+		return '';
+	}
+
+	return request.data;
+};
+
+const updateGiphyApiKey = async ( apiKey ) => {
+	const request = await axios( {
+		url: `${ wpGiphyBlockData.optionEndpoint }/wp_giphy_block_api_key`,
+		method: 'POST',
+		headers: {
+			'X-WP-Nonce': wpGiphyBlockData.security,
+		},
+		data: {
+			option_value: apiKey,
+		},
+	} );
+
+	if ( 200 !== request.status || ( ! request.data ) ) {
+		return false;
+	}
+
+	return true;
+};
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -48,6 +90,9 @@ export default function Edit( props ) {
 		setAttributes,
 	} = props;
 
+	const [ giphyApiKey, setGiphyApiKey ] = useState( '' );
+	const apiKeyInputRef = useRef( '' );
+
 	const searchGiphy = ( query ) => {
 		if ( ! query ) {
 			setAttributes( { searchResults: [] } );
@@ -60,7 +105,7 @@ export default function Edit( props ) {
 			const giphyApiEndpoint = addQueryArgs(
 				'https://api.giphy.com/v1/gifs/search',
 				{
-					api_key: 'cpiNEMWpw4D3DXaT4QIu7A8RZCnupclo',
+					api_key: giphyApiKey,
 					q: query,
 					limit: searchLimit,
 					offset: 0,
@@ -169,6 +214,12 @@ export default function Edit( props ) {
 		if ( ! selectedGif.hasOwnProperty( 'url' ) ) {
 			setAttributes( { isEditing: true } );
 		}
+
+		const getApiKey = async () => {
+			const apiKey = await getGiphyApiKey();
+			setGiphyApiKey( apiKey );
+		};
+		getApiKey();
 	}, [] );
 
 	return (
@@ -247,6 +298,35 @@ export default function Edit( props ) {
 
 			<InspectorControls>
 				<Panel>
+					<PanelBody
+						title={ __( 'Global Settings', 'giphy-block' ) }
+						initialOpen={ true }
+					>
+						<PanelRow>
+							<GiphyInputControl
+								label={ __( 'Giphy API Key', 'giphy-block' ) }
+								type="text"
+								value={ giphyApiKey }
+								onChange={ ( apiKey ) => setGiphyApiKey( apiKey ) }
+								ref={ apiKeyInputRef }
+							/>
+						</PanelRow>
+						<PanelRow>
+							<Button
+								isPrimary
+								onClick={ () => {
+									updateGiphyApiKey( apiKeyInputRef.current.value );
+								} }
+							>
+								{ __( 'Save Setting', 'giphy-block' ) }
+							</Button>
+						</PanelRow>
+						<PanelRow>
+							<p>
+								Get an API key from <a href="https://developers.giphy.com/" target="_blank" rel="noreferrer">Giphy</a> and save it.
+							</p>
+						</PanelRow>
+					</PanelBody>
 					<PanelBody
 						title={ __( 'Giphy Block Settings', 'giphy-block' ) }
 						initialOpen={ true }
