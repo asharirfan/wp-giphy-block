@@ -58,7 +58,7 @@ function register_block() {
 		'wpGiphyBlockData',
 		[
 			'security'       => wp_create_nonce( 'wp_rest' ),
-			'optionEndpoint' => rest_url( 'ashar-irfan/wp-giphy-block/v1/option' ),
+			'optionEndpoint' => rest_url( 'ashar-irfan/wp-giphy-block/v1/giphy-api-key' ),
 		]
 	);
 
@@ -114,31 +114,17 @@ add_action( 'init', __NAMESPACE__ . '\register_block' );
 function register_rest_routes() {
 	register_rest_route(
 		'ashar-irfan/wp-giphy-block/v1',
-		'/option/(?P<option>([A-Za-z\_])+)/',
+		'/giphy-api-key',
 		[
 			[
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => __NAMESPACE__ . '\get_giphy_option',
 				'permission_callback' => __NAMESPACE__ . '\rest_authenticate',
-				'args'                => [
-					'option' => [
-						'validate_callback' => function( $param ) {
-							return is_string( $param );
-						},
-					],
-				],
 			],
 			[
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => __NAMESPACE__ . '\update_giphy_option',
 				'permission_callback' => __NAMESPACE__ . '\rest_authenticate',
-				'args'                => [
-					'option' => [
-						'validate_callback' => function( $param ) {
-							return is_string( $param );
-						},
-					],
-				],
 			],
 		]
 	);
@@ -151,23 +137,10 @@ add_action( 'rest_api_init', __NAMESPACE__ . '\register_rest_routes' );
  * @author Ashar Irfan
  * @since 0.1.0
  *
- * @param WP_REST_Request $request REST API request object.
  * @return WP_Error|WP_REST_Response
  */
-function get_giphy_option( WP_REST_Request $request ) {
-	$option_name = $request->get_param( 'option' );
-
-	if ( ! is_string( $option_name ) ) {
-		return new WP_Error(
-			'invalid_option_name',
-			esc_html__( 'Invalid option name', 'giphy-block' )
-		);
-	}
-
-	return new WP_REST_Response(
-		get_option( $option_name, '' ),
-		200
-	);
+function get_giphy_option() {
+	return new WP_REST_Response( get_option( 'wp_giphy_block_api_key', '' ), 200 );
 }
 
 /**
@@ -180,20 +153,13 @@ function get_giphy_option( WP_REST_Request $request ) {
  * @return WP_Error|WP_REST_Response
  */
 function update_giphy_option( WP_REST_Request $request ) {
-	$option_name = $request->get_param( 'option' );
 
-	if ( ! is_string( $option_name ) ) {
-		return new WP_Error(
-			'invalid_option_name',
-			esc_html__( 'Invalid option name', 'giphy-block' )
-		);
-	}
-
+	// Get API key to be saved from the request.
 	$request_json = $request->get_json_params();
 	$option_value = $request_json['option_value'] ?? '';
 
 	return new WP_REST_Response(
-		update_option( $option_name, $option_value ),
+		update_option( 'wp_giphy_block_api_key', $option_value ),
 		200
 	);
 }

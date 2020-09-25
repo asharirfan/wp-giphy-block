@@ -32,7 +32,7 @@ import GiphyInputControl from '../../utils/components/giphy-text-control';
 
 const getGiphyApiKey = async () => {
 	const request = await axios( {
-		url: `${ wpGiphyBlockData.optionEndpoint }/wp_giphy_block_api_key`,
+		url: `${ wpGiphyBlockData.optionEndpoint }`,
 		method: 'GET',
 		headers: {
 			'X-WP-Nonce': wpGiphyBlockData.security,
@@ -50,7 +50,7 @@ const updateGiphyApiKey = async ( apiKey, saveBtn ) => {
 	saveBtn.disabled = true;
 
 	const request = await axios( {
-		url: `${ wpGiphyBlockData.optionEndpoint }/wp_giphy_block_api_key`,
+		url: `${ wpGiphyBlockData.optionEndpoint }`,
 		method: 'POST',
 		headers: {
 			'X-WP-Nonce': wpGiphyBlockData.security,
