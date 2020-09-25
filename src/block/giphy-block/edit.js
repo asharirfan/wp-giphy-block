@@ -23,6 +23,7 @@ import {
 	useState,
 	useRef,
 } from '@wordpress/element';
+import { dispatch } from '@wordpress/data';
 import axios from 'axios';
 import './editor.scss';
 import GiphyInputControl from '../../utils/components/giphy-text-control';
@@ -45,7 +46,9 @@ const getGiphyApiKey = async () => {
 	return request.data;
 };
 
-const updateGiphyApiKey = async ( apiKey ) => {
+const updateGiphyApiKey = async ( apiKey, saveBtn ) => {
+	saveBtn.disabled = true;
+
 	const request = await axios( {
 		url: `${ wpGiphyBlockData.optionEndpoint }/wp_giphy_block_api_key`,
 		method: 'POST',
@@ -57,9 +60,13 @@ const updateGiphyApiKey = async ( apiKey ) => {
 		},
 	} );
 
+	saveBtn.disabled = false;
+
 	if ( 200 !== request.status || ( ! request.data ) ) {
 		return false;
 	}
+
+	dispatch( 'core/notices' ).createSuccessNotice( __( 'API saved successfully', 'giphy-block' ) );
 
 	return true;
 };
@@ -314,9 +321,7 @@ export default function Edit( props ) {
 						<PanelRow>
 							<Button
 								isPrimary
-								onClick={ () => {
-									updateGiphyApiKey( apiKeyInputRef.current.value );
-								} }
+								onClick={ ( event ) => updateGiphyApiKey( apiKeyInputRef.current.value, event.target ) }
 							>
 								{ __( 'Save Setting', 'giphy-block' ) }
 							</Button>
