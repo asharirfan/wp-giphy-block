@@ -1,17 +1,17 @@
 {
-	"name": "giphy-block",
+	"name": "wp-giphy-block",
 	"version": "0.1.0",
-	"description": "A block for displaying GIFs from Giphy.com in Gutenberg",
-	"author": "WebDevStudios",
-	"license": "GPL-3.0",
+	"description": "A custom Gutenberg block for searching and displaying GIFs from Giphy.com in Gutenberg.",
+	"author": "asharirfan",
+	"license": "GPL-2.0-or-later",
 	"bugs": {
-		"url": "https://github.com/WebDevStudios/wds-block-starter/issues"
+		"url": "https://github.com/asharirfan/wp-giphy-block/issues"
 	},
-	"homepage": "https://github.com/WebDevStudios/wds-block-starter#readme",
+	"homepage": "https://github.com/asharirfan/wp-giphy-block#readme",
 	"main": "src/index.js",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/WebDevStudios/wds-block-starter"
+		"url": "git+https://github.com/asharirfan/wp-giphy-block"
 	},
 	"keywords": [
 		"Gutenberg"
