@@ -2,7 +2,7 @@
 
 > A custom Gutenberg block for searching and displaying GIFs from Giphy.com in Gutenberg.
 
-![Screenshot](https://i.imgur.com/cA22RhE.gif)
+![Screenshot](https://i.imgur.com/nXfD7yf.gif)
 
 ## 🛠 Global Settings
 **Important:** Before searching for gifs, please make sure to generate an API key from [Giphy](https://developers.giphy.com) and save it under the **Giphy API Key** setting.
